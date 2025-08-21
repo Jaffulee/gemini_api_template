@@ -191,3 +191,9 @@ python query_gemini.py
       git commit -m "Message_here"
       git push origin main
       ```
+
+## Use Case: Generating a README
+
+- I saved my first draft of these instructions in Inputs\draft_instructions.txt
+- I used the generate_readmy.py script to read the draft instructions and got Gemini to produce a formatted markdown README in a new file called README_GENERATED.md
+- This was used as a base for this README!
