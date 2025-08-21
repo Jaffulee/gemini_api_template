@@ -178,10 +178,16 @@ Before querying Gemini, you'll need an API key.
     print()  # newline
     ```
 
-3.  **Run the Script:**
-    - Save the `query_gemini.py` file.
-    - In your VSCode terminal (with the virtual environment activated), run:
-      `bash
+3.  **Run the Script:** - Save the `query_gemini.py` file. - In your VSCode terminal (with the virtual environment activated), run:
+    `bash
 python query_gemini.py
 `
-      The output will be printed directly in your console.
+    The output will be printed directly in your console.
+
+4.  **Push to GitHub:**
+    - In your terminal, commit and push your changes:
+      ```bash
+      git add .
+      git commit -m "Message_here"
+      git push origin main
+      ```
