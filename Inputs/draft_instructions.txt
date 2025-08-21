@@ -1,0 +1,169 @@
+Gemini API in Python walkthrough
+
+Gemini API in Python walkthrough	1
+Setting up the repo	2
+… from scratch	2
+… from template (quick start)	6
+API Keys and Environment Variables	7
+Querying Gemini through Python	7
+Plaintext output:	10
+
+
+Setting up the repo
+… from scratch
+I am going to create a new repository using github and github desktop
+
+
+Open in GitHub Desktop via Code > Open with GitHub Desktop
+
+Then clone the repository and open it in VSCode
+
+In VSCode, open a terminal and set up a virtual environment via running:
+python -m venv .venv
+.venv/Scripts/activate
+Press ctrl+shift+p, then click:
+Python: Select Interpreter
+Click Python x.xx.x (.venv)
+Create a file called .env for your (secret) environment variables
+Ensure this is not in your .venv folder!
+Ensure you have a .gitignore file with “.env” and “.venv” included - this will be already there if you used the Python .gitignore template!
+In your .env, create a placeholder key GEMINI_API_KEY = 'enter_key_here'
+
+Run pip install python-dotenv google-genai google-generativeai in terminal (the one in your venv)
+Note that the third package is an older library which many old tutorials use, included here in case someone wishes to use this
+Run pip freeze > requirements.txt to save your dependencies in a requirements.txt file
+To install packages from a requirements.txt file, you can run pip install -r requirements.txt to run pip install on the text content of the file
+Now let us finish the setup by pushing our current state of the repo to GitHub
+In a Terminal type
+git add . to stage our local changes
+git commit -m “Initialise repo” to commit the staged changes locally with a message
+git push origin main to push our local changes to the remote GitHub repository
+Can verify this worked by looking at your GitHub repository - you should see your requirements.txt added (and no more!)
+
+
+
+
+… from template (quick start)
+Visit https://github.com/Jaffulee/gemini_api_template
+Click Fork at the top right to create your own copy of the repository
+Name your repository what you want
+Open your forked repository in GitHub Desktop via Code > Open with GitHub Desktop
+In GitHub Desktop, then clone the repository and open it in VSCode (e.g. via Repository > Open in Visual Studio Code
+In Visual Studio Code, we will set up our virtual environment
+Open a terminal window via Terminal > New Terminal
+Run the following two commands
+python -m venv .venv
+.venv/Scripts/activate
+Verify your terminal has a green (.venv) on the left
+Ensure you are using the correct Python interpreter via 
+Press ctrl+shift+p
+Click Python: Select Interpreter
+Click Python x.xx.x (.venv)
+Ensure we have the required packages by running the following command in the terminal
+pip install -r requirements.txt
+Create a file called .env for your (secret) environment variables
+Ensure this is not in your .venv folder!
+In your .env, create a placeholder key GEMINI_API_KEY = 'enter_key_here'
+
+API Keys and Environment Variables
+Gemini API pricing can be found here - the free tier is of interest to us!
+https://ai.google.dev/gemini-api/docs/pricing
+
+The documentation can be found here 
+https://ai.google.dev/gemini-api/
+
+We will base the example on the text generation section
+
+https://ai.google.dev/gemini-api/docs/text-generation?_gl=1*u7njbu*_up*MQ..*_ga*MTM0Njg5NTg4MC4xNzU1Nzg2OTU1*_ga_P1DBVKWT6V*czE3NTU3ODY5NTQkbzEkZzAkdDE3NTU3ODY5NTQkajYwJGwwJGgxOTQ3Nzc1ODI5#python_2
+
+
+Using your google account, you can receive an API key via
+https://aistudio.google.com/apikey
+Click + Create API key
+Take your API key and record it securely
+Additionally, save it into your .env file from before replacing the placeholder GEMINI_API_KEY = 'enter_key_here'  
+
+Querying Gemini through Python
+Make (or open if from template) a .py file, e.g. query_gemini.py
+Ensure this is not in your .venv folder!
+In this file, we will import the required packages we installed earlier
+import os
+from dotenv import load_dotenv
+from google import genai
+Then, we can: 
+Access our API key using dotenv
+Initialise the Gemini client using Google’s genai
+Query the model we selected
+# Save model version used as a string
+model = "gemini-2.5-flash"
+
+
+# 1) Load API key from .env (GEMINI_API_KEY=your_key with no quotes)
+load_dotenv()
+api_key = os.getenv("GEMINI_API_KEY")
+if not api_key:
+    raise RuntimeError("GEMINI_API_KEY not set. Check your .env file.")
+
+
+# 2) Init client
+client = genai.Client(api_key=api_key)
+
+
+# 3) One-off request (non-chat)
+message = "Explain how AI works in a few words."
+resp = client.models.generate_content(
+    model = model,
+    contents = message
+)
+print("[input] ->", message)
+print("[single] ->", resp.text)
+
+
+The output will be printed in the console due to our print statements.
+
+We can also do multi-turn chats via streaming or otherwise. An example is as follows
+
+
+# 4) Multi-turn chat (non-streaming)
+chat = client.chats.create(model = model)
+
+
+resp1 = chat.send_message("I have 2 dogs in my house.")
+print("[chat 1] ->", resp1.text)
+
+
+resp2 = chat.send_message("How many paws are in my house?")
+print("[chat 2] ->", resp2.text)
+
+
+# 5) Inspect history safely (handles text parts robustly)
+print("\n[history]")
+for msg in chat.get_history():
+    # Each message has .role and .parts (parts can be text or other types)
+    parts_text = []
+    for p in getattr(msg, "parts", []) or []:
+        # Text parts usually have .text; fall back to str for non-text parts
+        parts_text.append(getattr(p, "text", str(p)))
+    print(f"{msg.role}: {' '.join(parts_text)}")
+
+
+# 6) Streaming example
+print("\n[streaming]")
+stream = chat.send_message_stream("Now answer in exactly five words.")
+for chunk in stream:
+    if getattr(chunk, "text", None):
+        print(chunk.text, end="")
+print()  # newline
+
+
+print("\n[streaming 2]")
+stream = chat.send_message_stream("Now answer using five consecutive haikus, pondering the absurdity of such a task.")
+for chunk in stream:
+    if getattr(chunk, "text", None):
+        print(chunk.text, end="")
+print()  # newline
+
+
+
+
+The output again will be printed to the console

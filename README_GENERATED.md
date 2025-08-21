@@ -182,6 +182,6 @@ Before querying Gemini, you'll need an API key.
     - Save the `query_gemini.py` file.
     - In your VSCode terminal (with the virtual environment activated), run:
       `bash
-python query_gemini.py
-`
+    python query_gemini.py
+    `
       The output will be printed directly in your console.
