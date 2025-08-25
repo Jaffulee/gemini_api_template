@@ -1,3 +1,4 @@
+<!-- Preview Markdown in VSCode by enabling keyboard shortcut mode with ctrl+k, then press v for view -->
 # Gemini API in Python Walkthrough
 
 This guide provides instructions on setting up your environment and using the Gemini API with Python in VSCode.
@@ -20,11 +21,18 @@ You can set up your project either from scratch or by using a pre-configured tem
       python -m venv .venv
       .venv/Scripts/activate
       ```
+    - If you get a security error when running activate, you may need to change your machine's execution policy by running Windows PowerShell as administrator and running the command:
+      ```bash
+      Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope LocalMachine
+      ```
     - Verify your terminal has a green `(.venv)` on the left.
 5.  **Select Python Interpreter:**
     - Press `Ctrl+Shift+P` (or `Cmd+Shift+P` on Mac).
     - Type and select `Python: Select Interpreter`.
     - Choose `Python x.xx.x (.venv)`.
+    - (Optional) Change your VSCode Python Environment settings so that the run button uses your Virtual Environment by:
+      - Navigate to `File > Preferences > Settings` (or `Code > Settings` on macOS)
+      - Search for `python terminal` and ensure `Activate Terminal` and `Execute in File Directory` are enabled.
 6.  **Create `.env` file:**
     - Create a file named `.env` in the root of your project (ensure it's **not** inside the `.venv` folder).
     - Ensure your `.gitignore` file includes `.env` and `.venv`. (This is often pre-configured if you use a Python `.gitignore` template).
@@ -47,6 +55,7 @@ You can set up your project either from scratch or by using a pre-configured tem
       ```
     - Verify on GitHub that your `requirements.txt` (and `.gitignore` if created) are added.
 
+
 ### From Template (Quick Start)
 
 1.  **Fork the Template Repository:**
@@ -64,11 +73,18 @@ You can set up your project either from scratch or by using a pre-configured tem
       python -m venv .venv
       .venv/Scripts/activate
       ```
+    - If you get a security error when running activate, you may need to change your machine's execution policy by running Windows PowerShell as administrator and running the command:
+      ```bash
+      Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope LocalMachine
+      ```
     - Verify your terminal has a green `(.venv)` on the left.
 5.  **Select Python Interpreter:**
     - Press `Ctrl+Shift+P` (or `Cmd+Shift+P` on Mac).
     - Type and select `Python: Select Interpreter`.
     - Choose `Python x.xx.x (.venv)`.
+    - (Optional) Change your VSCode Python Environment settings so that the run button uses your Virtual Environment by:
+      - Navigate to `File > Preferences > Settings` (or `Code > Settings` on macOS)
+      - Search for `python terminal` and ensure `Activate Terminal` and `Execute in File Directory` are enabled.
 6.  **Install Dependencies:**
     - In your activated virtual environment terminal, run:
       ```bash
@@ -179,7 +195,7 @@ Before querying Gemini, you'll need an API key.
     ```
 
 3.  **Run the Script:** - Save the `query_gemini.py` file. - In your VSCode terminal (with the virtual environment activated), run:
-    `bash
+    `
 python query_gemini.py
 `
     The output will be printed directly in your console.
